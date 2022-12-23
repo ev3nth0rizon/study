@@ -9,13 +9,13 @@ SCREEN_H = 600
 SCREEN_BORDER = 20
 
 wn = turtle.Screen()
-wn.bgcolor("black")
+wn.bgcolor('black') 
 wn.setup(SCREEN_W, SCREEN_H)
 wn.tracer(0)
 
 head = turtle.Turtle()
-head.shape("square")
-head.color("blue")
+head.shape('square')
+head.color('blue')
 head.penup()
 head.goto(0, 0)
 head.direction = "Stop"
@@ -60,17 +60,17 @@ def goright():
 
 def move():
 	if head.direction == "up":
-		y = head.ycor()
-		head.sety(y+20)
+		movey = head.ycor()
+		head.sety(movey+20)
 	if head.direction == "down":
-		y = head.ycor()
-		head.sety(y-20)
+		movey = head.ycor()
+		head.sety(movey-20)
 	if head.direction == "left":
-		x = head.xcor()
-		head.setx(x-20)
+		movex = head.xcor()
+		head.setx(movex-20)
 	if head.direction == "right":
-		x = head.xcor()
-		head.setx(x+20)
+		movex = head.xcor()
+		head.setx(movex+20)
 
 
 wn.listen()
@@ -82,30 +82,41 @@ wn.onkeypress(goright, "d")
 segments = []
 
 
+def genxy():
+	screen_h_border = SCREEN_H - SCREEN_BORDER * 2
+	screen_w_border = SCREEN_W - SCREEN_BORDER * 2
+	foodx = round((random.randint(0, screen_h_border) - (screen_h_border / 2)) / 20, 0)
+	x1 = 20 * foodx
+	foody = round((random.randint(0, screen_w_border) - (screen_w_border / 2)) / 20, 0)
+	y1 = 20 * foody
+	return x1, y1
+
+
 while True:
 	wn.update()
-	# if head.xcor() >= SCREEN_H / 2 or head.xcor() <= -0.5 * SCREEN_H or head.ycor() >= SCREEN_W / 2 or head.ycor() <= -0.5 * SCREEN_W:
 	if abs(head.xcor()) >= SCREEN_H / 2 or abs(head.ycor()) >= SCREEN_W / 2:
 		time.sleep(1)
 		head.goto(0, 0)
 		head.direction = "Stop"
 		colors = 'red'
 		shapes = 'square'
-		for segment in segments:
-			segment.goto(SCREEN_H*10, SCREEN_W*10)
+		for segment_loop1 in segments:
+			segment_loop1.goto(SCREEN_H * 10, SCREEN_W * 10)
 		segments.clear()
 		delay = 0.1
 		pen.clear()
 
 	if head.distance(food) < 20:
-		screen_h_border = SCREEN_H - SCREEN_BORDER * 2
-		screen_w_border = SCREEN_W - SCREEN_BORDER * 2
-		foodx = round((random.randint(0, screen_h_border) - (screen_h_border/2))/20, 0)
-		x = 20 * foodx
-		foody = round((random.randint(0, screen_w_border) - (screen_w_border/2))/20, 0)
-		y = 20 * foody
+		while True:
+			x, y = genxy()
+			break_snake = False
+			for segment in segments:
+				if x == segment.xcor() and y == segment.ycor():
+					break_snake = True
+					break
+			if not break_snake:
+				break
 		food.goto(x, y)
-
 
 		new_segment = turtle.Turtle()
 		new_segment.speed(0)
@@ -125,18 +136,17 @@ while True:
 		y = head.ycor()
 		segments[0].goto(x, y)
 	move()
-	for segment in segments:
-		if segment.distance(head) < 20:
+	for segment_loop1 in segments:
+		if segment_loop1.distance(head) < 20:
 			time.sleep(1)
 			head.goto(0, 0)
 			head.direction = "Stop"
 			colors = 'red'
 			shapes = 'square'
-			for segment in segments:
-				segment.goto(SCREEN_H*10, SCREEN_W*10)
+			for segment_loop2 in segments:
+				segment_loop2.goto(SCREEN_H * 10, SCREEN_W * 10)
 			segments.clear()
 			delay = 0.1
 			pen.clear()
-
 
 	time.sleep(delay)
