@@ -8,13 +8,13 @@ SCREEN_W = 600
 SCREEN_H = 600
 SCREEN_BORDER = 20
 
-wn = turtle.Screen()
-wn.bgcolor('black') 
-wn.setup(SCREEN_W, SCREEN_H)
-wn.tracer(0)
+scr = turtle.Screen()
+scr.bgcolor('black')
+scr.setup(SCREEN_W, SCREEN_H)
+scr.tracer(0)
 
 head = turtle.Turtle()
-head.shape('square')
+head.shape('circle')
 head.color('blue')
 head.penup()
 head.goto(0, 0)
@@ -38,7 +38,7 @@ pen.hideturtle()
 pen.goto(0, 250)
 
 
-def group():
+def goup():
 	if head.direction != "down":
 		head.direction = "up"
 
@@ -73,11 +73,11 @@ def move():
 		head.setx(movex+20)
 
 
-wn.listen()
-wn.onkeypress(group, "w")
-wn.onkeypress(godown, "s")
-wn.onkeypress(goleft, "a")
-wn.onkeypress(goright, "d")
+scr.listen()
+scr.onkeypress(goup, "w")
+scr.onkeypress(godown, "s")
+scr.onkeypress(goleft, "a")
+scr.onkeypress(goright, "d")
 
 segments = []
 
@@ -93,7 +93,7 @@ def genxy():
 
 
 while True:
-	wn.update()
+	scr.update()
 	if abs(head.xcor()) >= SCREEN_H / 2 or abs(head.ycor()) >= SCREEN_W / 2:
 		time.sleep(1)
 		head.goto(0, 0)
@@ -105,6 +105,7 @@ while True:
 		segments.clear()
 		delay = 0.1
 		pen.clear()
+		food.goto(0, 100)
 
 	if head.distance(food) < 20:
 		while True:
@@ -148,5 +149,6 @@ while True:
 			segments.clear()
 			delay = 0.1
 			pen.clear()
+			food.goto(0, 100)
 
 	time.sleep(delay)
