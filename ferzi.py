@@ -13,7 +13,6 @@ scr.setup(SCREEN_H, SCREEN_W)
 tstar = turtle.Turtle()
 tstar.screen.tracer(0, 0)
 tstar.color('red')
-tstar.penup()
 
 
 def star(x, y):
