@@ -8,45 +8,23 @@ chessboard = turtle.Turtle()
 chessboard.screen.tracer(0, 0)
 
 scr = turtle.Screen()
-scr.bgcolor('black')
 scr.setup(SCREEN_H, SCREEN_W)
-scr.tracer(0)
 
-queen = turtle.Turtle()
-
-
-
-def star(coord_list):
-    for i in range(8):
-        x = coord_list[i].xcor * 100 - 50
-        y = coord_list[i].ycor * 100 - 50
-        queen.goto(x, y)
-        queen.pendown()
-        for i in range(5):
-            queen.forward(60)
-            queen.right(144)
-        queen.fillcolor('red')
-        queen.penup()
+tstar = turtle.Turtle()
+tstar.screen.tracer(0, 0)
+tstar.color('red')
+tstar.penup()
 
 
-for i in range(4):
-    chessboard.forward(800)
-    chessboard.right(90)
-
-def perebor_doski():
-    doska = []
-    for i in range(8):
-        for j in range(8):
-            doska.append((i, j))
-    return doska
-
-
-def hit_by(coords1, coords2):
-    if coords1[0] == coords2[0] or coords1[1] == coords2[1] or abs(coords1[0] - coords2[0]) == abs(coords1[1] - coords2[1]):
-        return True
-    else:
-        return False
-
+def star(x, y):
+    tstar.goto(-425 + (x * 100), 460 - (y * 100))
+    tstar.pendown()
+    tstar.begin_fill()
+    for z in range(5):
+        tstar.right(144)
+        tstar.forward(50)
+    tstar.end_fill()
+    tstar.penup()
 
 
 def smallsquare():
@@ -57,33 +35,55 @@ def smallsquare():
     chessboard.end_fill()
 
 
-scr.listen()
-# scr.onkeypress(shuffle, "w")
-
-for i in range(8):
-    for j in range(8):
-        chessboard.penup()
-        chessboard.goto(-400 + (j * 100), 400 - (i * 100))
-        chessboard.pendown()
-        k = i + j
-        if k / 2 == k // 2:
-            chessboard.fillcolor('white')
-        else:
-            chessboard.fillcolor('black')
-        smallsquare()
-chessboard.screen.update()
-time.sleep(100)
-
-queens = []
-queens.append((1,1))
-
-for k in range(7):
+def bigsquare():
     for i in range(8):
-       for j in range(8):
-           m = (i,j)
-        if not hit_by(queens[i],m):
-            queens.append(l)
-            break
+        for j in range(8):
+            chessboard.penup()
+            chessboard.goto(-400 + (j * 100), 400 - (i * 100))
+            chessboard.pendown()
+            k = i + j
+            if k / 2 == k // 2:
+                chessboard.fillcolor('white')
+            else:
+                chessboard.fillcolor('black')
+            smallsquare()
 
 
+def under_attack(column, existing_queens):
+    row = len(existing_queens)+1
+    for queen in existing_queens:
+        r, c = queen
+        if r == row:
+            return True
+        if c == column:
+            return True
+        if (column-c) == (row-r):
+            return True
+        if (column-c) == -(row-r):
+            return True
+    return False
 
+
+def solve(n):
+    if n == 0:
+        return [[]]
+    smaller_solutions = solve(n-1)
+    solutions = []
+    for solution in smaller_solutions:
+        for column in range(1, 9):
+            if not under_attack(column, solution):
+                solutions.append(solution + [(n, column)])
+    if n == 8:
+        for y in range(20):
+            for p in solutions[y]:
+                (x, y) = p
+                star(x, y)
+                chessboard.screen.update()
+            time.sleep(5)
+            tstar.screen.update()
+            bigsquare()
+    return solutions
+
+
+bigsquare()
+solve(8)
