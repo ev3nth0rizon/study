@@ -5,13 +5,13 @@ SCREEN_W = 800
 SCREEN_H = 800
 
 chessboard = turtle.Turtle()
-chessboard.screen.tracer(0, 0)
+chessboard.screen.tracer(0)
 
 scr = turtle.Screen()
 scr.setup(SCREEN_H, SCREEN_W)
 
 tstar = turtle.Turtle()
-tstar.screen.tracer(0, 0)
+tstar.screen.tracer(0)
 tstar.color('red')
 
 
